@@ -448,7 +448,7 @@ console.log("Data uploaded");
                 fontSize: 25,
                 fontFamily: 'OCR A',
               }}>
-              REGISTER STUDENT
+              Register Student
             </Text>
           </TouchableOpacity>
         </KeyboardAvoidingView>

@@ -12,7 +12,7 @@ import {
   Alert,
 } from 'react-native';
 import axios from 'axios';
-import {URL} from '../url/Url';
+import {URL} from '../../url/Url';
 
 export default () => {
   const [courseID, setCourseID] = useState('');
@@ -201,7 +201,7 @@ export default () => {
                 fontSize: 25,
                 fontFamily: 'OCR A',
               }}>
-              REGISTER MODULE
+              UPDATE MODULE
             </Text>
           </TouchableOpacity>
         </KeyboardAvoidingView>

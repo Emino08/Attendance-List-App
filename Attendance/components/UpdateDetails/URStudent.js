@@ -12,7 +12,7 @@ import {
   Alert,
 } from 'react-native';
 import axios from 'axios';
-import { URL } from '../url/Url';
+import { URL } from '../../url/Url';
 import RNBluetoothClassic from 'react-native-bluetooth-classic';
 
 export default () => {
@@ -36,222 +36,10 @@ export default () => {
   // const passwordInputRef = createRef();
 
   useEffect(() => {
-  axios
-    .get(`${URL}/student/lastindex`)
-    .then(function (response) {
-      let data = response.data
-      let enrolling = data[0].sfingerprintID
-      // console.log(enrolling);
-      setEnroll(Number(enrolling) + 1);
-      // console.log(enroll);
-      // this.changeData(response)
-      // handle success
-      // let data = response.data;
-      // if (typeof data === 'object') {
-      //   console.log('Login');
-      // }
-      // // console.log(typeof data);
-      // console.log(data);
-      // let count = 0;
-      // while (data === 'No FingerprintID found') {
-      //   console.log('while loop');
-      //   if (count === 0) {
-      //     setTimeout(() => (name1 = device.write('MATCH')), 1000);
-      //     count++;
-      //   }
-      //   break;
-      // }
-   
-    })
-    .catch(function (error) {
-      // handle error
-      console.log(error);
-    });
+  
   },[]);
   handleOnPress = () => {
     navigation.navigate('ForgetPassword');
-  };
-
-const sendData = async (dev) => {
-  try {
-    console.log(`Attempting to send data ${'this.state.text'}`);
-    let message = 'START';
-    let message1 = 'ENROLL ' + enroll;
-
-    let name = await dev.write(message);
-
-    console.log('Name ' + name);
-    addData({
-      timestamp: new Date(),
-      // data: "this.state.text",
-      data: message,
-      type: 'm1sent',
-    });
-
-    let name1;
-    setTimeout(() => (name1 = dev.write(message1)), 3000);
-
-    console.log('Name1 ' + name1);
-
-    addData({
-      timestamp: new Date(),
-      data: message1,
-      type: 'm2sent',
-    });
-    addData({
-      timestamp: new Date(),
-      data: `Byte array: `,
-      type: 'sent',
-    });
-
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-  const addData = async message => {
-    setData([message, ...data]);
-  };
-
-  check = async () => {
-    console.log('check called');
-    try {
-      let address = '98:D3:31:F7:63:2C';
-      let device = await RNBluetoothClassic.getConnectedDevice(address);
-      if (device) {
-        setDevice(device)
-        sendData(device);
-        initializeRead();
-        console.log("hi");
-      }
-      // this.setState({device});
-      console.log('check called aftert');
-      console.log(device);
-    } catch (err) {
-      // Error if Bluetooth
-       console.log(err);
-      // Or there are any issues requesting paired devices
-    }
-  };
-
-  const performRead = async () => {
-    try {
-      console.log('Polling for available messages');
-
-      let available = await device.available();
-      // console.log(`There is data available [${available}], attempting read`);
-      // let data_r = '';
-
-      if (available > 0) {
-        for (let i = 0; i < available; i++) {
-          // console.log(`reading ${i}th time`);
-          let data = await device.read();
-          // data_r.concat(data);
-          // console.log(`Read data ${data}`);
-          // console.log(data);
-
-          onReceivedData({data});
-        }
-        // console.log(data_r);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const onReceivedData = async event => {
-    let data = event.data;
-    console.log(data);
-    let count = 0; 
-    console.log(data.length);
-    
-// console.log(data !== 'ENROLLED');
-     while (data.length === 4) {
-       console.log('while loop');
-       if (count === 0) {
-         setTimeout(() => (name1 = device.write('ENROLL ' + (enroll))), 1000);
-         count++;
-       }
-       break;
-     }
-    if (data.length === 9) {
-console.log("Data uploaded");
-      let data = {
-        studentID,
-        studentName,
-        studentEmail,
-        studentPhone,
-        yearID,
-        programID,
-        sfingerprintID: Number(enroll),
-      };
-
-      console.log(data);
-      axios
-        .post(`${URL}/student`, data)
-        .then(function (response) {
-          setEnroll(enroll + 1)
-          alert(response.data);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    }
-    // console.log(isNaN(event.data));
-    // if (isNaN(data) === false) {
-    //   setId(data);
-
-    //   var self = this;
-    //   axios
-    //     .get(`${URL}/lecturer/fingerprint/${data}`)
-    //     .then(function (response) {
-    //       // this.changeData(response)
-    //       // handle success
-    //       let data = response.data;
-    //       if (typeof data === 'object') {
-    //         console.log('Login');
-    //       }
-    //       // console.log(typeof data);
-    //       console.log(data);
-    //       let count = 0;
-    //       while (data === 'No FingerprintID found') {
-    //         console.log('while loop');
-    //         if (count === 0) {
-    //           setTimeout(() => (name1 = device.write('MATCH')), 1000);
-    //           count++;
-    //         }
-    //         break;
-    //       }
-
-    //     })
-    //     .catch(function (error) {
-    //       // handle error
-    //       console.log(error);
-    //     });
-
-    // }
-    
-    event.timestamp = new Date();
-    addData({
-      ...event,
-      timestamp: new Date(),
-      type: 'receive',
-    });
-  };
-
-  initializeRead = () => {
-    // disconnectSubscription = RNBluetoothClassic.onDeviceDisconnected(() =>
-    //   this.disconnect(true),
-    // );
-    // sendData()
-    if (polling) {
-      setPolling(false);
-      console.log('read interval call');
-      performRead();
-    } else {
-      console.log('read subscription call');
-      readSubscription = device.onDataReceived(data => onReceivedData(data));
-    }
   };
 
   const handleSubmitPress = () => {
@@ -285,18 +73,18 @@ console.log("Data uploaded");
       alert('Please fill student Year');
       return;
     }
- check();
-    // let data = {studentID, studentName, studentEmail, studentPhone, yearID, programID, sfingerprintID:4};
 
-    // console.log(data);
-    // axios
-    //   .post(`${URL}/student`, data)
-    //   .then(function (response) {
-    //     alert(response.data);
-    //   })
-    //   .catch(function (error) {
-    //     console.log(error);
-    //   });
+    let data = {studentID, studentName, studentEmail, studentPhone, yearID, programID};
+
+    console.log(data);
+    axios
+      .put(`${URL}/student/${Number(studentID)}`, data)
+      .then(function (response) {
+        alert(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   const submitHandler = () => {
@@ -448,7 +236,7 @@ console.log("Data uploaded");
                 fontSize: 25,
                 fontFamily: 'OCR A',
               }}>
-              REGISTER STUDENT
+              UPDATE STUDENT
             </Text>
           </TouchableOpacity>
         </KeyboardAvoidingView>

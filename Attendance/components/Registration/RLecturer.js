@@ -126,7 +126,6 @@ isMounted.current = true;
 }
 
   const handleSubmitPress = () => {
-    console.log(selectCourses);
     setErrortext('');
     if (!lecturerID) {
       alert('Please fill LecturerID');
@@ -295,7 +294,7 @@ isMounted.current = true;
                 fontSize: 25,
                 fontFamily: 'OCR A',
               }}>
-              REGISTER LECTURER
+              REGISTER
             </Text>
           </TouchableOpacity>
         </KeyboardAvoidingView>

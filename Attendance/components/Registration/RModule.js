@@ -201,7 +201,7 @@ export default () => {
                 fontSize: 25,
                 fontFamily: 'OCR A',
               }}>
-              REGISTER MODULE
+              LOG IN
             </Text>
           </TouchableOpacity>
         </KeyboardAvoidingView>

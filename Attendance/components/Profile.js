@@ -5,63 +5,8 @@ import SelectBox from 'react-native-multi-selectbox';
 import { xorBy } from 'lodash';
 import {URL} from '../url/Url';
 
-const K_OPTIONS = [
-  {
-    item: 'Juventus',
-    id: 'JUVE',
-  },
-  {
-    item: 'Real Madrid',
-    id: 'RM',
-  },
-  {
-    item: 'Barcelona',
-    id: 'BR',
-  },
-  {
-    item: 'PSG',
-    id: 'PSG',
-  },
-  {
-    item: 'FC Bayern Munich',
-    id: 'FBM',
-  },
-  {
-    item: 'Manchester United FC',
-    id: 'MUN',
-  },
-  {
-    item: 'Manchester City FC',
-    id: 'MCI',
-  },
-  {
-    item: 'Everton FC',
-    id: 'EVE',
-  },
-  {
-    item: 'Tottenham Hotspur FC',
-    id: 'TOT',
-  },
-  {
-    item: 'Chelsea FC',
-    id: 'CHE',
-  },
-  {
-    item: 'Liverpool FC',
-    id: 'LIV',
-  },
-  {
-    item: 'Arsenal FC',
-    id: 'ARS',
-  },
 
-  {
-    item: 'Leicester City FC',
-    id: 'LEI',
-  },
-];
-
-export default () => {
+export default ({navigation}) => {
 
 const [lecturerID, setLecturerID] = useState('');
   const [lecturerName, setLecturerName] = useState('');
@@ -126,7 +71,6 @@ isMounted.current = true;
 }
 
   const handleSubmitPress = () => {
-    console.log(selectCourses);
     setErrortext('');
     if (!lecturerID) {
       alert('Please fill LecturerID');
@@ -169,9 +113,9 @@ isMounted.current = true;
 //    setLecturerPhone('');
 //  };
   
- const onMultiChange = (item) => {
-    setSelectCourses(xorBy(selectCourses, [item], 'id'));
-  }
+//  const onMultiChange = (item) => {
+//     setSelectCourses(xorBy(selectCourses, [item], 'id'));
+//   }
   return (
     <View
       style={{
@@ -225,7 +169,37 @@ isMounted.current = true;
                 // onSubmitEditing={submitHandler}
                 style={styles.textInput}
                 onChangeText={lecturerPhone => setLecturerPhone(lecturerPhone)}
-                placeholder="Enter Phone Number" //12345
+                placeholder="Enter Old Password" //12345
+                placeholderTextColor="white"
+                keyboardType="numeric"
+                // ref={passwordInputRef}
+                onSubmitEditing={Keyboard.dismiss}
+                blurOnSubmit={false}
+                underlineColorAndroid="#f000"
+                returnKeyType="next"></TextInput>
+            </View>
+
+            <View style={styles.margin}>
+              <TextInput
+                // onSubmitEditing={submitHandler}
+                style={styles.textInput}
+                onChangeText={lecturerPhone => setLecturerPhone(lecturerPhone)}
+                placeholder="Enter New Password" //12345
+                placeholderTextColor="white"
+                keyboardType="numeric"
+                // ref={passwordInputRef}
+                onSubmitEditing={Keyboard.dismiss}
+                blurOnSubmit={false}
+                underlineColorAndroid="#f000"
+                returnKeyType="next"></TextInput>
+            </View>
+
+            <View style={styles.margin}>
+              <TextInput
+                // onSubmitEditing={submitHandler}
+                style={styles.textInput}
+                onChangeText={lecturerPhone => setLecturerPhone(lecturerPhone)}
+                placeholder="Confirm Password" //12345
                 placeholderTextColor="white"
                 keyboardType="numeric"
                 // ref={passwordInputRef}
@@ -236,45 +210,6 @@ isMounted.current = true;
             </View>
           </View>
 
-          <View style={{alignItems: 'center', marginTop: 27}}>
-            <SelectBox
-              // viewMargin
-              width={320}
-              label="Select Courses"
-              options={selectNewCourse}
-              selectedValues={selectCourses}
-              onMultiSelect={onMultiChange}
-              onTapClose={onMultiChange}
-              isMulti
-              optionStyle={{
-                color: 'black',
-                fontWeight: 'bold',
-                backgroundColor: 'white',
-              }}
-              labelStyle={{
-                color: 'white',
-                fontWeight: 'bold',
-                fontSize: 18,
-              }}
-              containerStyle={{
-                borderWidth: 2,
-                borderColor: 'rgba(255, 215, 0, 255)',
-                // borderRadius: 15,
-                backgroundColor: 'white',
-              }}
-              optionContainerStyle={{
-                color: 'black',
-                backgroundColor: 'white',
-              }}
-              inputFilterContainerStyle={{
-                color: 'black',
-                backgroundColor: 'white',
-              }}
-            />
-          </View>
-          {errortext != '' ? (
-            <Text style={styles.errorTextStyle}>{errortext}</Text>
-          ) : null}
           <TouchableOpacity
             activeOpacity={0.5}
             onPress={handleSubmitPress}
@@ -295,17 +230,13 @@ isMounted.current = true;
                 fontSize: 25,
                 fontFamily: 'OCR A',
               }}>
-              REGISTER LECTURER
+              UPDATE PROFILE
             </Text>
           </TouchableOpacity>
         </KeyboardAvoidingView>
       </View>
     </View>
   );
-
-  // function onMultiChange() {
-  //   return item => setSelectCourses(xorBy(selectCourses, [item], 'id'));
-  // }
 
   return isMounted;
 };

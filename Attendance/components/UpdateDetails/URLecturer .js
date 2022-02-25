@@ -3,7 +3,7 @@ import {View, Text,TextInput, Button, TouchableHighlight, Keyboard, KeyboardAvoi
 import axios from 'axios';
 import SelectBox from 'react-native-multi-selectbox';
 import { xorBy } from 'lodash';
-import {URL} from '../url/Url';
+import {URL} from '../../url/Url';
 
 const K_OPTIONS = [
   {
@@ -70,13 +70,17 @@ const [loading, setLoading] = useState(false);
   const [errortext, setErrortext] = useState('');
   const [selectCourses, setSelectCourses] = useState([]);
   const [selectNewCourse, setSelectNewcourse] = useState();
+  const [cList,setCList] = useState();
   var NewCourses = [];
+  var selCourses = [];
+
 
   const passwordInputRef = createRef();
   // const passwordInputRef = createRef();
   // const passwordInputRef = createRef();
 const isMounted = useRef(false);
   useEffect(() => {
+    lecCourses();
 isMounted.current = true;
     let isActive = true;
     axios
@@ -107,7 +111,8 @@ isMounted.current = true;
           }
           
           setSelectNewcourse(NewCourses)
-          // setSelectCourses(data);
+          // console.log(JSON.stringify(cList));
+          // setSelectCourses(cList);
           
         })
         .catch(function (error) {
@@ -119,14 +124,52 @@ isMounted.current = true;
         });
 
     return () => (isMounted.current = false);
+    
 
   },[])
    handleOnPress = () => {
   navigation.navigate('ForgetPassword');
-}
+   }
+  
+  console.log("Is sme" + JSON.stringify(cList) );
+  const lecCourses = async () => {
+   axios
+     .get(`${URL}/courses/lecturer/10`)
+     .then(function (response) {
+       
+      //  alert(JSON.stringify(selectCourses) );
+       
+       function renameKeys(obj, newKeys) {
+         const keyValues = Object.keys(obj).map(key => {
+           const newKey = newKeys[key] || key;
+           return {[newKey]: obj[key]};
+         });
+         return Object.assign({}, ...keyValues);
+       }
 
+       const newKeys = { courseName: 'item', courseID: 'id' };
+       
+       let data = response.data;
+       for (let i = 0; i < data.length; i++) {
+         const renamedObj = renameKeys(data[i], newKeys);
+
+         selCourses.push(renamedObj);
+         // console.log(renamedObj);
+
+         console.log(selCourses);
+         // console.log(JSON.stringify);
+       }
+
+       setCList(selCourses);
+
+     }) 
+     .catch(function (error) {
+       console.log(error);
+     });
+}
+  
   const handleSubmitPress = () => {
-    console.log(selectCourses);
+ 
     setErrortext('');
     if (!lecturerID) {
       alert('Please fill LecturerID');
@@ -145,12 +188,13 @@ isMounted.current = true;
       return;
     }
 
-    let data = {lecturerID, lecturerName, lecturerPhone,lecturerCourses:selectCourses};
+
+    let data = {lecturerID, lecturerName, lecturerPhone,lecturerCourses:cList};
 
     console.log(data);
     console.log(selectCourses);
     axios
-      .post(`${URL}/lecturer`, data)
+      .put(`${URL}/lecturer/${lecturerID}`, data)
       .then(function (response) {
         alert(response.data);
       })
@@ -158,6 +202,7 @@ isMounted.current = true;
         console.log(error);
       });
 
+    
    setLecturerID('');
    setLecturerName('');
    setLecturerPhone('');
@@ -170,7 +215,7 @@ isMounted.current = true;
 //  };
   
  const onMultiChange = (item) => {
-    setSelectCourses(xorBy(selectCourses, [item], 'id'));
+    setCList(xorBy(cList, [item], 'id'));
   }
   return (
     <View
@@ -242,7 +287,7 @@ isMounted.current = true;
               width={320}
               label="Select Courses"
               options={selectNewCourse}
-              selectedValues={selectCourses}
+              selectedValues={cList === undefined ? []: cList}
               onMultiSelect={onMultiChange}
               onTapClose={onMultiChange}
               isMulti
@@ -295,7 +340,7 @@ isMounted.current = true;
                 fontSize: 25,
                 fontFamily: 'OCR A',
               }}>
-              REGISTER LECTURER
+              UPDATE LECTURER
             </Text>
           </TouchableOpacity>
         </KeyboardAvoidingView>

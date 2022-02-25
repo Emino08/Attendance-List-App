@@ -15,6 +15,7 @@ import {
   NetInfo,
   PermissionsAndroid
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loader from './Loader';
 import axios from 'axios';
 import RNBluetoothClassic from 'react-native-bluetooth-classic';
@@ -64,6 +65,7 @@ export default ({navigation}) => {
       onStateChanged(event),
     );
 
+    getData('username')
     // Will turn bluetooth on if not already switch on
     checkBluetootEnabled();
 
@@ -192,7 +194,7 @@ alert("Connected to the bluetooth")
       // } else {
       //   console.log('No data sent');
       // }
-      initializeRead();
+      // initializeRead();
       alert(conn);
       // initializeRead(); //read
     } catch (error) {
@@ -262,8 +264,26 @@ const performRead = async() => {
           // handle success
           let data = response.data;
           if (typeof data === 'object') {
-            console.log("Login");
-            alert("Login")
+            // console.log("Login");
+            // alert("Login")
+            
+            if (data.usertype === 1) {
+              removeValue('username');
+              removeValue('password');
+              storeData('username', data.userID + '');
+              storeData('password', data.userPassword + '');
+              console.log('Yes');
+            navigation.navigate('Navigation', {userID: data.userID});
+            } else if (data.usertype === 2) {
+              removeValue('username');
+              removeValue('password');
+              storeData('username', data.userID + '');
+              storeData('password', data.userPassword + '');
+              navigation.navigate('LNavigation')
+            } else {
+              alert(JSON.stringify(data.usertype) )
+            }
+            
           }
           // console.log(typeof data);
           console.log(data);
@@ -497,6 +517,10 @@ setTimeout(() => name1 = cDevice.write(message1), 3000);
    };
 
   const handleFingerprint = () => {
+
+    setInterval(() => {
+      initializeRead();
+    }, 1000);
     let counter = 0;
     alert('Fingerprint');
      if (connection) {
@@ -640,6 +664,40 @@ setTimeout(() => name1 = cDevice.write(message1), 3000);
     // startDiscovery()
   };
 
+  // Change here
+
+  const storeData = async (key,value) => {
+    try {
+      await AsyncStorage.setItem(key, value+'');
+
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const getData = async (key) => {
+    try {
+      const value = await AsyncStorage.getItem(key);
+      if (value !== null) {
+        // value previously stored
+        console.log("Previosly stored");
+        console.log(value);
+      }
+    } catch (e) {
+      // error reading value
+      console.log(e);
+    }
+  };
+
+  removeValue = async (value) => {
+    try {
+      await AsyncStorage.removeItem(value);
+    } catch (e) {
+      // remove error
+    }
+
+    console.log('Done.');
+  };
   const handleSubmit = () => {
     setErrortext('');
     if (!userName) {
@@ -710,11 +768,24 @@ setTimeout(() => name1 = cDevice.write(message1), 3000);
       if (xhr.readyState === 4) {
         //  console.log(xhr.status);
         console.log(xhr.responseText);
-        if (xhr.responseText === 'Successfully Login') {
+        if (xhr.responseText === '1') {
+          removeValue('username')
+          removeValue('password')
+          storeData('username', userName);
+          storeData('password', userPassword);
+          
           console.log('Yes');
-          navigation.navigate('Navigation');
+          navigation.navigate('Navigation', {userID: userName});
+        } else if (xhr.responseText === '2') {
+          removeValue('username');
+          removeValue('password');
+          storeData('username', userName);
+          storeData('password', userPassword);
+ navigation.navigate('LNavigation', {userID: userName});
+        } else{
+          alert("Incorrect Password")
         }
-        navigation.navigate('Navigation');
+       
       }
     };
 

@@ -86,7 +86,7 @@ export default ({navigation}) => {
           textAlign: 'center',
           marginTop: windowHeight - 580,
         }}>
-        by
+        {/* by */}
       </Text>
       <Text
         style={{
@@ -97,7 +97,7 @@ export default ({navigation}) => {
           marginTop: 5,
           textAlign: 'center',
         }}>
-        Emmanuel.m.koroma
+        {/* Emmanuel.m.koroma */}
       </Text>
     </View>
   );

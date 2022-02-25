@@ -13,9 +13,9 @@ import {
 
 import axios from 'axios';
 import {Picker} from '@react-native-picker/picker';
-import { URL } from '../url/Url';
+import {URL} from '../url/Url';
 import RNBluetoothClassic from 'react-native-bluetooth-classic';
-  
+
 export default class FlatListBasics extends Component {
   constructor(props) {
     super(props);
@@ -31,24 +31,20 @@ export default class FlatListBasics extends Component {
       connection: false,
       polling: true,
       cDevice: undefined,
-      message:[],
-      id:undefined
+      message: [],
+      id: undefined,
     };
-
-    console.log(props.route.params.cSelected.id);
   }
 
-
-  componentDidMount(){
-   let num = 2;
-    let courseID = 101
+  componentDidMount() {
+    let num = 2;
+    let courseID = 101;
     let num1 = 3;
     // this.handleList(num, courseID)
     // this.handleList(num1, courseID);
     this.check();
     // this.setTimeout(check(), 3000);
-    
-}
+  }
 
   handleList = (attend, course) => {
     var self = this;
@@ -57,16 +53,7 @@ export default class FlatListBasics extends Component {
       .then(function (response) {
         // this.changeData(response)
         // handle success
-        alert("My response: " + response.data);
-
-        // let chars = ['A', 'B', 'A', 'C', 'B'];
-
-        // console.log(response.data);
-        // let uniqueChars = self.state.attendance.filter((c, index) => {
-        //   return chars.indexOf(c) === index;
-        // });
-
-        // console.log(uniqueChars);
+        console.log(response.data);
         self.setState({attendance: [...self.state.attendance, response.data]});
         console.log(self.state.attendance);
         console.log(self.state.attendance);
@@ -80,198 +67,30 @@ export default class FlatListBasics extends Component {
       .then(function () {
         // always executed
       });
-  } 
-
-  check = async () => {
-    console.log("check called");
-  try {
-    let address = "98:D3:31:F7:63:2C"
-    let device = await RNBluetoothClassic.getConnectedDevice(address);
-    if (device) {
-      this.sendData(device)
-      this.initializeRead();
-      this.setState({ cDevice: device })
-    }
-    // this.setState({device});
-    // console.log('check called aftert');
-    // console.log(device);
-} catch (err) {
-    // Error if Bluetooth is not enabled
-    // Or there are any issues requesting paired devices
-} 
-}
-
-  connect = async (speaker) => {
-    // console.log('Connect called');
-    // // let speaker = { "address": "33:6E:31:29:66:DC", "name": "MQ SPEAKER" }
-    // let speaker = {address: '98:D3:31:F7:63:2C', name: 'HC05'};
-    // console.log(speaker.address);
-    try {
-      let conn = await speaker.isConnected();
-      console.log(conn);
-      // console.log("Connected to " + JSON.stringify(cDevice));
-      // sendData()
-      if (!conn) {
-        this.addData({
-          data: `Attempting conn to ${speaker.address}`,
-          timestamp: new Date(),
-          type: 'error',
-        });
-
-        console.log({DELIMITER: '9'});
-        conn = await speaker.connect({CONNECTION_TYPE: 'delimited'});
-alert("Connected to the bluetooth")
-        this.addData({
-          data: 'conn successful',
-          timestamp: new Date(),
-          type: 'info',
-        });
-      } else {
-        this.addData({
-          data: `Connected to ${speaker.address}`,
-          timestamp: new Date(),
-          type: 'error',
-        });
-        alert("Already connected")
-      }
-this.setState({connection:conn})
-      // setConnection(conn);
-      if (this.state.connection) {
-        this.sendData(this.state.cDevice);
-        this.initializeRead();
-        console.log('Data sent');
-      } else {
-        console.log('No data sent');
-      }
-      
-      alert(conn);
-      // initializeRead(); //read
-    } catch (error) {
-      this.addData({
-        data: `conn failed: ${error.message}`,
-        timestamp: new Date(),
-        type: 'error',
-      });
-    }
   };
 
-  addData = async message => {
-    this.setState({message:[message, ...this.state.message]})
-    // setData([message, ...data]);
-  };
 
-  performRead = async() => {
-    try {
-      console.log('Polling for available messages');
-      
-      let available = await this.state.cDevice.available();
-      // console.log(`There is data available [${available}], attempting read`);
-      // let data_r = '';
-
-      if (available > 0) {
-        for (let i = 0; i < available; i++) {
-          // console.log(`reading ${i}th time`);
-          let data = await this.state.cDevice.read();
-          // data_r.concat(data);
-          // console.log(`Read data ${data}`);
-          // console.log(data);
-
-          this.onReceivedData({data});
-        }
-        // console.log(data_r);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  onReceivedData = async (event) => {
-    let data = Number(event.data)
+  onReceivedData = async event => {
+    let data = Number(event.data);
     console.log(event.data);
     // console.log(Number(event.data) === 1);
     // console.log(Number(data));
     if (isNaN(data) === false) {
-      this.setState({ id: data })
-      console.log("This is the fingerprintID: " + this.state.id);
-      // let courseID = 101
-      let courseID = this.props.route.params.cSelected.id;
-      console.log(this.props.route.params);
+      this.setState({id: data});
+      console.log(this.state.id);
+      let courseID = 101;
       this.handleList(data, courseID);
     }
-      // if (Number(event.data) === 1) {
-      //   console.log('End Connection');
-      //   // let name = await this.state.cDevice.write("END");
-      // }
+    // if (Number(event.data) === 1) {
+    //   console.log('End Connection');
+    //   // let name = await this.state.cDevice.write("END");
+    // }
     event.timestamp = new Date();
     this.addData({
       ...event,
       timestamp: new Date(),
       type: 'receive',
     });
-  }
-
-  initializeRead = () => {
-    // disconnectSubscription = RNBluetoothClassic.onDeviceDisconnected(() =>
-    //   this.disconnect(true),
-    // );
-// sendData()
-    if (this.state.polling) {
-      this.setState({polling: false});
-      console.log("read interval call");
-      this.readInterval = setInterval(() => this.performRead(), 5000);
-    } else {
-      console.log("read subscription call");
-      this.readSubscription = this.state.cDevice.onDataReceived(data =>
-        this.onReceivedData(data),
-      );
-    }
-  }
-
-  sendData = async (dev) => {
-    try {
-      console.log(`Attempting to send data ${'this.state.text'}`);
-      let message = 'START';
-      let message1 = 'ATTENDANCE';
-
-      let name = await dev.write(message)
-      
-
-      console.log('Name ' + name);
-      this.addData({
-        timestamp: new Date(),
-        // data: "this.state.text",
-        data: message,
-        type: 'm1sent',
-      });
-      // await RNBluetoothClassic.writeToDevice(dev, message1);
-      let name1;
-setInterval(() => name1 = dev.write(message1), 3000);
-      
-//       console.log("Name1 " + name1);
-
-      // let m = await dev.write(message);
-      // console.log("Message 1 " + m);
-      // if (m) {
-      //   let name1 = await dev.write(message1);
-      //   console.log("Message 2 " + name1);
-      // }
-
-      this.addData({
-        timestamp: new Date(),
-        // data: "this.state.text",
-        data: message1,
-        type: 'm2sent',
-      });
-      this.addData({
-        timestamp: new Date(),
-        data: `Byte array: `,
-        type: 'sent',
-      });
-
-      // this.setState({text: undefined});
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   renderSeparator = () => {
@@ -291,7 +110,6 @@ setInterval(() => name1 = dev.write(message1), 3000);
   };
 
   render() {
-
     if (this.state.error) {
       return (
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -307,7 +125,6 @@ setInterval(() => name1 = dev.write(message1), 3000);
 
       <View style={{backgroundColor: 'rgba(2, 62, 196, 1)', height: '100%'}}>
         <View style={styles.container}>
-
           <Text>Taking Attendance Now</Text>
 
           {this.state.finish ? (
@@ -416,4 +233,3 @@ const styles = StyleSheet.create({
     borderWidth: 6,
   },
 });
-

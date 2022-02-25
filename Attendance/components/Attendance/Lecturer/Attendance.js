@@ -226,7 +226,7 @@ import SelectBox from 'react-native-multi-selectbox';
 import {xorBy} from 'lodash';
 import ToggleSwitch from 'toggle-switch-react-native';
 import axios from 'axios';
-import { URL } from '../url/Url';
+import { URL } from '../../../url/Url';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 // Options data must contain 'item' & 'id' keys
 
@@ -403,7 +403,7 @@ function App({navigation}) {
     setSelectCourses({})
     setSelectNewcourse()
     // console.log("it me" + JSON.stringify(selectCourses));
-console.log(value + " " + val.id + " " + selectProgram.id);
+
     if (Object.keys(selectProgram).length === 0) {
       alert('Please choose Program');
       return;

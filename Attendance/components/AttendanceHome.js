@@ -7,8 +7,7 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import axios from 'axios';
-import { URL } from '../url/Url';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {URL} from '../url/Url';
 
 const Stack = createStackNavigator();
 
@@ -16,27 +15,19 @@ const Stack = createStackNavigator();
 // const navigation = useNavigation();
 
 
-export default ({ route, navigation }) => {
-  
-  const details = route.params;
+export default ({ navigation }) => {
 
-  const [hodName, setHodName] = useState('HOD Name');
-  const [value, setValue] = useState('')
+  const [hodName, setHodName] = useState({ name: 'Mr. Emmanuel Koroma' });
 
-  // console.log("My user" + details );
-  // const value = AsyncStorage.getItem('username');
-  // console.log("this value is" + JSON.stringify(value));
-  // let lecturerID = value;
   useEffect(() => {
-    getData("username");
-  },[])
+    
+  })
   
   axios
-    .get(`${URL}/lecturer/${value}`)
+    .get(`${URL}/courses`)
     .then(function (response) {
       // handle success
-      setHodName(response.data.lecturerName);
-      console.log(response.data.lecturerName);
+      console.log(response.data);
     })
     .catch(function (error) {
       // handle error
@@ -59,46 +50,17 @@ export default ({ route, navigation }) => {
   //     console.log(error);
   //   });
   
-   const getData = async key => {
-     try {
-       const value = await AsyncStorage.getItem(key);
-       if (value !== null) {
-         // value previously stored
-        //  console.log('Previosly stored');
-        //  console.log(value);
-setValue(value);
-      //    axios
-      //      .get(`${URL}/lecturer/${value}`)
-      //      .then(function (response) {
-      //        // handle success
-      //        setHodName(response.data.lecturerName);
-      //        console.log(response.data.lecturerName);
-      //      })
-      //      .catch(function (error) {
-      //        // handle error
-      //        console.log(error);
-      //      })
-      //      .then(function () {
-      //        // always executed
-      //      });
-       }
-     } catch (e) {
-       // error reading value
-       console.log(e);
-     }
-   };
-  
   handleDAttendance = () => {
-  navigation.navigate('AttendanceHome');
+  navigation.navigate('Attendance');
   }
 
-  handleRLecturer = () => {
-    navigation.navigate('RegistrationHome');
-  };
+  // handleRLecturer = () => {
+  //   navigation.navigate('RLecturer');
+  // };
 
-  handleModule = () => {
-    navigation.navigate('UpdateHome');
-  };
+  // handleModule = () => {
+  //   navigation.navigate('RModule');
+  // };
 
   // handleAttendance1 = () => {
   //   navigation.navigate('Attendance1');
@@ -118,13 +80,18 @@ setValue(value);
     navigation.navigate('AllAttendance2');
   };
 
+    handleClassAttendance = () => {
+      navigation.navigate('ClassAttendance');
+    };
+
+
   handleAllAttendace1 = () => {
     navigation.navigate('AllAttendance1');
   };
 
-  handleRStudent = () => {
-    navigation.navigate('RStudent');
-  };
+  // handleRStudent = () => {
+  //   navigation.navigate('RStudent');
+  // };
 
   return (
     <View
@@ -135,48 +102,7 @@ setValue(value);
         backgroundColor: 'rgba(2, 62, 196, 1)',
         color: 'black',
       }}>
-      <View
-        style={{
-          width: 340,
-          height: 163,
-          backgroundColor: 'rgba(255, 255, 255, 255)',
-          borderRadius: 10,
-          marginTop: 10,
-          color: 'black',
-        }}>
-        <Text
-          style={{
-            fontFamily: 'Lucida Console',
-            fontSize: 34,
-            marginTop: 15,
-            marginLeft: 20,
-            color: 'black',
-          }}>
-          WELCOME
-        </Text>
-        <Text
-          style={{
-            fontFamily: 'Lucida Console',
-            fontSize: 24,
-            marginTop: 5,
-            marginLeft: 20,
-            color: 'black',
-          }}>
-          {hodName}
-        </Text>
-        <Text
-          style={{
-            fontFamily: 'Limoges',
-            fontSize: 21,
-            marginTop: 5,
-            marginLeft: 20,
-            color: 'black',
-          }}>
-          Head of Department
-        </Text>
-      </View>
-
-      <TouchableHighlight
+      {/* <TouchableHighlight
         onPress={handleDAttendance}
         style={{
           paddingStart: 24,
@@ -195,12 +121,11 @@ setValue(value);
           }}>
           Take Attendance
         </Text>
-      </TouchableHighlight>
+      </TouchableHighlight> */}
 
       <TouchableHighlight
-        onPress={handleRLecturer}
+        onPress={handleAllAttendance2}
         style={{
-          alignItems: 'flex-start',
           paddingStart: 24,
           paddingTop: 5,
           width: 340,
@@ -215,12 +140,12 @@ setValue(value);
             fontSize: 18,
             color: 'rgba(255, 255, 255, 255)',
           }}>
-          Registration
+          View Student Attendance
         </Text>
       </TouchableHighlight>
 
       <TouchableHighlight
-        onPress={handleModule}
+        onPress={handleClassAttendance}
         style={{
           paddingStart: 24,
           paddingTop: 5,
@@ -236,7 +161,7 @@ setValue(value);
             fontSize: 18,
             color: 'rgba(255, 255, 255, 255)',
           }}>
-          Update Details
+          View Class Attendance
         </Text>
       </TouchableHighlight>
     </View>

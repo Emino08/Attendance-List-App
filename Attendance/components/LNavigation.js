@@ -30,6 +30,7 @@ import LAllAttendance2 from './Attendance/Lecturer/All Attendance2'
 import LClassAttendance from './Attendance/Lecturer/ClassAttendance'
 import LAttendance from './Attendance/Lecturer/Attendance'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Login from './Login'
 import LAttendanceHome from './Attendance/Lecturer/AttendanceHome'
 
 const Stack = createStackNavigator();
@@ -45,9 +46,9 @@ const Stack = createStackNavigator();
 // }
 const homeScreenStack = ({navigation}) => {
   return (
-    <Stack.Navigator initialRouteName="Home">
+    <Stack.Navigator initialRouteName="LAttendanceHome">
       <Stack.Screen
-        name="Home"
+        name="Attendance Home"
         component={Home}
         options={{headerShown: false}}
       />
@@ -177,11 +178,11 @@ const homeScreenStack = ({navigation}) => {
         options={{headerShown: false}}
       />
 
-      {/* <Stack.Screen
+      <Stack.Screen
         name="Login"
         component={Login}
         options={{headerShown: false}}
-      /> */}
+      />
     </Stack.Navigator>
   );
 };

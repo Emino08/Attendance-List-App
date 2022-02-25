@@ -10,7 +10,7 @@ import {
   TextInput,
   ActivityIndicator
 } from 'react-native';
-import {URL} from '../url/Url';
+import {URL} from '../../../url/Url';
 
 import axios from 'axios';
 import {Picker} from '@react-native-picker/picker';

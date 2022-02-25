@@ -13,6 +13,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import SplashScreen from './components/Splash Screen';
 import LoginScreen from './components/Login';
 import Navigation from './components/Navigation'
+import LNavigation from './components/LNavigation'
 import Attendance from './components/Attendance';
 // Forget Password
 import ForgetPassword from './components/All Attendance1';
@@ -103,6 +104,13 @@ const App = () => {
         <Stack.Screen
           name="Navigation"
           component={Navigation}
+          // Hiding header for Navigation Drawer
+          options={{headerShown: false}}
+        />
+
+        <Stack.Screen
+          name="LNavigation"
+          component={LNavigation}
           // Hiding header for Navigation Drawer
           options={{headerShown: false}}
         />
